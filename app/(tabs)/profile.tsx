@@ -1,91 +1,174 @@
+
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
-import { GlassView } from "expo-glass-effect";
-import { useTheme } from "@react-navigation/native";
+import { colors } from "@/styles/commonStyles";
+import { Stack } from "expo-router";
 
 export default function ProfileScreen() {
-  const theme = useTheme();
+  const profileItems = [
+    {
+      id: 'account',
+      title: 'اطلاعات حساب',
+      icon: 'person.circle.fill',
+      color: colors.primary,
+    },
+    {
+      id: 'database',
+      title: 'تنظیمات دیتابیس',
+      icon: 'server.rack',
+      color: colors.secondary,
+    },
+    {
+      id: 'reports',
+      title: 'گزارشات ذخیره شده',
+      icon: 'folder.fill',
+      color: colors.accent,
+    },
+    {
+      id: 'settings',
+      title: 'تنظیمات',
+      icon: 'gear',
+      color: colors.primary,
+    },
+    {
+      id: 'help',
+      title: 'راهنما و پشتیبانی',
+      icon: 'questionmark.circle.fill',
+      color: colors.secondary,
+    },
+    {
+      id: 'about',
+      title: 'درباره برنامه',
+      icon: 'info.circle.fill',
+      color: colors.accent,
+    },
+  ];
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]} edges={['top']}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={[
-          styles.contentContainer,
-          Platform.OS !== 'ios' && styles.contentContainerWithTabBar
-        ]}
-      >
-        <GlassView style={[
-          styles.profileHeader,
-          Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-        ]} glassEffectStyle="regular">
-          <IconSymbol name="person.circle.fill" size={80} color={theme.colors.primary} />
-          <Text style={[styles.name, { color: theme.colors.text }]}>John Doe</Text>
-          <Text style={[styles.email, { color: theme.dark ? '#98989D' : '#666' }]}>john.doe@example.com</Text>
-        </GlassView>
+    <>
+      {Platform.OS === 'ios' && (
+        <Stack.Screen
+          options={{
+            title: "پروفایل",
+          }}
+        />
+      )}
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            Platform.OS !== 'ios' && styles.scrollContentWithTabBar
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <View style={styles.avatarContainer}>
+              <IconSymbol name="person.fill" color="white" size={48} />
+            </View>
+            <Text style={styles.userName}>کاربر</Text>
+            <Text style={styles.userEmail}>user@example.com</Text>
+          </View>
 
-        <GlassView style={[
-          styles.section,
-          Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-        ]} glassEffectStyle="regular">
-          <View style={styles.infoRow}>
-            <IconSymbol name="phone.fill" size={20} color={theme.dark ? '#98989D' : '#666'} />
-            <Text style={[styles.infoText, { color: theme.colors.text }]}>+1 (555) 123-4567</Text>
+          <View style={styles.section}>
+            {profileItems.map((item) => (
+              <Pressable
+                key={item.id}
+                style={styles.menuItem}
+                onPress={() => console.log('Pressed:', item.id)}
+              >
+                <View style={[styles.menuIcon, { backgroundColor: item.color }]}>
+                  <IconSymbol name={item.icon as any} color="white" size={24} />
+                </View>
+                <Text style={styles.menuTitle}>{item.title}</Text>
+                <IconSymbol name="chevron.left" color={colors.textSecondary} size={20} />
+              </Pressable>
+            ))}
           </View>
-          <View style={styles.infoRow}>
-            <IconSymbol name="location.fill" size={20} color={theme.dark ? '#98989D' : '#666'} />
-            <Text style={[styles.infoText, { color: theme.colors.text }]}>San Francisco, CA</Text>
+
+          <View style={styles.versionCard}>
+            <Text style={styles.versionText}>نسخه 1.0.0</Text>
           </View>
-        </GlassView>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    // backgroundColor handled dynamically
-  },
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
-  contentContainer: {
-    padding: 20,
+  scrollContent: {
+    paddingVertical: 24,
+    paddingHorizontal: 16,
   },
-  contentContainerWithTabBar: {
-    paddingBottom: 100, // Extra padding for floating tab bar
+  scrollContentWithTabBar: {
+    paddingBottom: 100,
   },
-  profileHeader: {
+  header: {
     alignItems: 'center',
-    borderRadius: 12,
-    padding: 32,
+    marginBottom: 32,
+  },
+  avatarContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 16,
-    gap: 12,
+    boxShadow: '0px 4px 12px rgba(41, 128, 185, 0.3)',
+    elevation: 4,
   },
-  name: {
+  userName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    // color handled dynamically
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 4,
   },
-  email: {
-    fontSize: 16,
-    // color handled dynamically
+  userEmail: {
+    fontSize: 14,
+    color: colors.textSecondary,
   },
   section: {
-    borderRadius: 12,
-    padding: 20,
-    gap: 12,
+    marginBottom: 24,
   },
-  infoRow: {
+  menuItem: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.08)',
+    elevation: 2,
   },
-  infoText: {
+  menuIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  menuTitle: {
+    flex: 1,
     fontSize: 16,
-    // color handled dynamically
+    fontWeight: '600',
+    color: colors.text,
+    textAlign: 'right',
+  },
+  versionCard: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+  },
+  versionText: {
+    fontSize: 14,
+    color: colors.textSecondary,
   },
 });
