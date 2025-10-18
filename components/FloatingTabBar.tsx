@@ -62,7 +62,7 @@ export default function FloatingTabBar({
         stiffness: 90,
       });
     }
-  }, [activeIndex, containerWidth, tabs.length]);
+  }, [activeIndex, containerWidth, tabs.length, translateX]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
