@@ -62,8 +62,8 @@ export default function GenerateReportsScreen() {
 
       try {
         // In a real app, you would generate actual Excel/PowerBI files here
-        // eslint-disable-next-line import/namespace
         await FileSystem.writeAsStringAsync(fileUri, reportContent, {
+          // eslint-disable-next-line import/namespace
           encoding: FileSystem.EncodingType.UTF8,
         });
         
