@@ -57,10 +57,12 @@ export default function GenerateReportsScreen() {
       // Create sample report content
       const reportContent = generateSampleReportContent();
       const fileName = `report_${Date.now()}.${selectedFormat === 'excel' ? 'xlsx' : 'pbix'}`;
+      // eslint-disable-next-line import/namespace
       const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
       try {
         // In a real app, you would generate actual Excel/PowerBI files here
+        // eslint-disable-next-line import/namespace
         await FileSystem.writeAsStringAsync(fileUri, reportContent, {
           encoding: FileSystem.EncodingType.UTF8,
         });
